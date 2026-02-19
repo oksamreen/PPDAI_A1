@@ -1,9 +1,10 @@
+#Importing necessary libraries
+
 import streamlit as st
 import time
 
-# remedy database
+#Remedy database
 remedy_database = {
-    
     "Fine (strands are barely felt between fingers)": {
         "Thinning or hair loss": {
             "Stimulate new growth and density": "Lightweight densifying shampoo, daily peptide scalp serum, and targeted weekly rosemary water (not oil) spray.",
@@ -21,7 +22,6 @@ remedy_database = {
             "Add weightless volume and root lift": "Clay-based clarifying shampoo, skip leave-in oils entirely, and use a dry texturizing spray at the roots."
         }
     },
-
     "Medium (strands feel like a standard cotton thread)": {
         "Thinning or hair loss": {
             "Stimulate new growth and density": "Balanced sulfate-free wash, daily minoxidil or redensyl scalp drops, and 5-minute manual scalp massage.",
@@ -39,7 +39,6 @@ remedy_database = {
             "Add weightless volume and root lift": "BHA/AHA scalp treatment pre-wash, volumizing clay-based shampoo, and no conditioner on the top two inches of hair."
         }
     },
-
     "Thick/coarse (strands feel textured and substantial)": {
         "Thinning or hair loss": {
             "Stimulate new growth and density": "Rosemary essential oil blended with a carrier oil for scalp massages, mechanical exfoliation, and daily moisture creams for strands.",
@@ -59,84 +58,83 @@ remedy_database = {
     }
 }
 
-# ── Page config ──────────────────────────────────────────────────────────────
+#Tab title and icon
 st.set_page_config(page_title="Hair Care Consultant", page_icon="💇", layout="wide")
 
-# ── Custom brown/warm palette theme ──────────────────────────────────────────
+#Custom CSS for laytout and styling
 st.markdown("""
 <style>
-    /* Main background — warm cream */
+    /* Soft blush background */
     .stApp {
-        background-color: #FDF6EE;
+        background-color: #FFF0F0;
     }
 
-    /* Sidebar background — light caramel */
+    /* Main panel text — black (scoped to avoid overriding dropdowns/button) */
+    .stApp p, .stApp label, .stApp h1, .stApp h2, .stApp h3, .stMarkdown {
+        color: #1a1a1a !important;
+    }
+
+    /* Sidebar — very light rose */
     [data-testid="stSidebar"] {
-        background-color: #F2E4D0;
+        background-color: #FFE4E4;
     }
 
-    /* Sidebar text */
-    [data-testid="stSidebar"] * {
-        color: #5C3D1E !important;
+    /* Sidebar labels — black */
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] label {
+        color: #1a1a1a !important;
     }
 
-    /* Page title */
-    h1 {
-        color: #7B4A1E !important;
-        font-weight: 800;
+    /* Dropdown 1: deep crimson */
+    [data-testid="stSidebar"]
+      div[data-testid="stSelectbox"]:nth-of-type(1)
+      div[data-baseweb="select"] > div:first-child {
+        background-color: #8B0000 !important;
+        color: white !important;
     }
 
-    /* Subheadings */
-    h2, h3 {
-        color: #9C6133 !important;
+    /* Dropdown 2: classic red */
+    [data-testid="stSidebar"]
+      div[data-testid="stSelectbox"]:nth-of-type(2)
+      div[data-baseweb="select"] > div:first-child {
+        background-color: #C0392B !important;
+        color: white !important;
     }
 
-    /* Body text */
-    p, label, .stMarkdown {
-        color: #5C3D1E !important;
+    /* Dropdown 3: lighter rose-red */
+    [data-testid="stSidebar"]
+      div[data-testid="stSelectbox"]:nth-of-type(3)
+      div[data-baseweb="select"] > div:first-child {
+        background-color: #E57373 !important;
+        color: white !important;
     }
 
-    /* Primary button */
-    .stButton > button {
-        background-color: #A0522D !important;
-        color: #FDF6EE !important;
+    /* White text & arrow icons inside all dropdowns */
+    [data-testid="stSidebar"] [data-baseweb="select"] span,
+    [data-testid="stSidebar"] [data-baseweb="select"] div,
+    [data-testid="stSidebar"] [data-baseweb="select"] svg {
+        color: white !important;
+        fill: white !important;
+    }
+
+    /* Button — deep crimson to anchor the palette */
+    .stButton > button, .stButton > button * {
+        background-color: #8B0000 !important;
+        color: white !important;
         border: none !important;
         border-radius: 8px !important;
         font-weight: 600 !important;
         transition: background-color 0.2s ease;
     }
     .stButton > button:hover {
-        background-color: #7B4A1E !important;
-    }
-
-    /* Selectbox border accent */
-    [data-baseweb="select"] {
-        border-color: #C8916A !important;
-    }
-
-    /* Success box */
-    [data-testid="stAlert"] {
-        background-color: #F5E6D3 !important;
-        border-left: 4px solid #A0522D !important;
-        color: #5C3D1E !important;
-    }
-
-    /* Info box */
-    .stInfo {
-        background-color: #FAF0E6 !important;
-        border-left: 4px solid #C8916A !important;
-    }
-
-    /* Divider */
-    hr {
-        border-color: #D4A97A !important;
+        background-color: #6B0000 !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# ── Sidebar questionnaire ─────────────────────────────────────────────────────
+#Sidebar inputs
 with st.sidebar:
-    st.header("✨ Tell us about your hair")
+    st.header("Tell us about your hair")
     st.write("Answer the three questions below and we'll build your custom remedy.")
 
     user_texture = st.selectbox(
@@ -167,10 +165,10 @@ with st.sidebar:
     )
 
     st.divider()
-    button_clicked = st.button("💆 Get my custom remedy", use_container_width=True)
+    button_clicked = st.button("Get my custom remedy", use_container_width=True)
 
-# ── Main panel ────────────────────────────────────────────────────────────────
-st.title("Personalized Hair Care Consultant 💇")
+#Center page content
+st.title("Personalized Hair Care Consultant")
 st.write("Please answer the questions in the sidebar to get a tailored hair care routine just for you!")
 
 if button_clicked:
@@ -186,4 +184,4 @@ if button_clicked:
     st.info(final_remedy)
 
     st.divider()
-    st.caption(f"📋 Profile: **{user_texture}** · **{user_concern}** · **{user_goal}**")
+    st.caption(f"Profile: **{user_texture}** · **{user_concern}** · **{user_goal}**")
