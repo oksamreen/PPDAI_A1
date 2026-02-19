@@ -1,13 +1,7 @@
-#I will only use streamlit so I am only importing that.
-
 import streamlit as st
+import time
 
-#remedy database
-
-#I chose 3 types of hair, with 3 main conerns each, and 3 targeted solutions for each concern.
-#Kept it at 3 to not overcomplicate my idea, the options for each are based on hair quizes online and common hair care principles.
-#remedy_database is a nested dictionary, Gemini assisted with the structure and some of the content to ensure it is comprehensive and organized for easy retrieval based on user input. 
-
+# remedy database
 remedy_database = {
     
     "Fine (strands are barely felt between fingers)": {
@@ -64,45 +58,132 @@ remedy_database = {
         }
     }
 }
-#Creating the interface
 
-st.title("Personalized Hair Care Consultant")
-st.write("Please answer the following questions to get a tailored hair care routine just for you!")
+# ── Page config ──────────────────────────────────────────────────────────────
+st.set_page_config(page_title="Hair Care Consultant", page_icon="💇", layout="wide")
 
-# Creating the dropdown menus
-user_texture = st.selectbox(
-    "How would you describe your hair's natural texture?",
-    [
-        "Fine (strands are barely felt between fingers)", 
-        "Medium (strands feel like a standard cotton thread)", 
-        "Thick/coarse (strands feel textured and substantial)"
-    ]
-)
+# ── Custom brown/warm palette theme ──────────────────────────────────────────
+st.markdown("""
+<style>
+    /* Main background — warm cream */
+    .stApp {
+        background-color: #FDF6EE;
+    }
 
-user_concern = st.selectbox(
-    "What is your biggest hair or scalp concern right now?",
-    [
-        "Thinning or hair loss", 
-        "Dryness and severe breakage", 
-        "Oily scalp and product buildup"
-    ]
-)
+    /* Sidebar background — light caramel */
+    [data-testid="stSidebar"] {
+        background-color: #F2E4D0;
+    }
 
-user_goal = st.selectbox(
-    "What is the main goal you want to achieve with this remedy?",
-    [
-        "Stimulate new growth and density", 
-        "Repair damage and add deep hydration", 
-        "Add weightless volume and root lift"
-    ]
-)
+    /* Sidebar text */
+    [data-testid="stSidebar"] * {
+        color: #5C3D1E !important;
+    }
 
-#Creating the submit button
-button_clicked = st.button("Get my custom remedy")
+    /* Page title */
+    h1 {
+        color: #7B4A1E !important;
+        font-weight: 800;
+    }
 
-# Fetch and display the remedy if the button is clicked
+    /* Subheadings */
+    h2, h3 {
+        color: #9C6133 !important;
+    }
+
+    /* Body text */
+    p, label, .stMarkdown {
+        color: #5C3D1E !important;
+    }
+
+    /* Primary button */
+    .stButton > button {
+        background-color: #A0522D !important;
+        color: #FDF6EE !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        transition: background-color 0.2s ease;
+    }
+    .stButton > button:hover {
+        background-color: #7B4A1E !important;
+    }
+
+    /* Selectbox border accent */
+    [data-baseweb="select"] {
+        border-color: #C8916A !important;
+    }
+
+    /* Success box */
+    [data-testid="stAlert"] {
+        background-color: #F5E6D3 !important;
+        border-left: 4px solid #A0522D !important;
+        color: #5C3D1E !important;
+    }
+
+    /* Info box */
+    .stInfo {
+        background-color: #FAF0E6 !important;
+        border-left: 4px solid #C8916A !important;
+    }
+
+    /* Divider */
+    hr {
+        border-color: #D4A97A !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# ── Sidebar questionnaire ─────────────────────────────────────────────────────
+with st.sidebar:
+    st.header("✨ Tell us about your hair")
+    st.write("Answer the three questions below and we'll build your custom remedy.")
+
+    user_texture = st.selectbox(
+        "How would you describe your hair's natural texture?",
+        [
+            "Fine (strands are barely felt between fingers)",
+            "Medium (strands feel like a standard cotton thread)",
+            "Thick/coarse (strands feel textured and substantial)"
+        ]
+    )
+
+    user_concern = st.selectbox(
+        "What is your biggest hair or scalp concern right now?",
+        [
+            "Thinning or hair loss",
+            "Dryness and severe breakage",
+            "Oily scalp and product buildup"
+        ]
+    )
+
+    user_goal = st.selectbox(
+        "What is the main goal you want to achieve with this remedy?",
+        [
+            "Stimulate new growth and density",
+            "Repair damage and add deep hydration",
+            "Add weightless volume and root lift"
+        ]
+    )
+
+    st.divider()
+    button_clicked = st.button("💆 Get my custom remedy", use_container_width=True)
+
+# ── Main panel ────────────────────────────────────────────────────────────────
+st.title("Personalized Hair Care Consultant 💇")
+st.write("Please answer the questions in the sidebar to get a tailored hair care routine just for you!")
+
 if button_clicked:
-    final_remedy = remedy_database[user_texture][user_concern][user_goal]
-    
+    with st.spinner("Analysing your hair profile and curating your remedy…"):
+        time.sleep(2)
+
+    st.balloons()
+
     st.success("Here is your personalized hair remedy:")
-    st.write(final_remedy)
+
+    final_remedy = remedy_database[user_texture][user_concern][user_goal]
+
+    st.info(final_remedy)
+
+    st.divider()
+    st.caption(f"📋 Profile: **{user_texture}** · **{user_concern}** · **{user_goal}**")
