@@ -18,7 +18,7 @@ The recommendation logic is built on a 3x3x3 nested dictionary. This matrix maps
 - Custom visual styling and interactive celebration animations.
 
 **How to Run Locally**
-To test this prototype on your own machine, open your terminal and ensure your Python environment is active. Then, simply type streamlit run hair_consultant.py and press enter. The application will automatically launch in your default web browser.
+To test this prototype on your own machine, open your terminal and ensure your Python environment is active. Then, simply type **streamlit run hair_consultant.py** and press enter. The application will automatically launch in your default web browser.
 
 **Live Demo**
 You can try the live prototype hosted on Streamlit Community Cloud here: https://remedyme.streamlit.app/ 
